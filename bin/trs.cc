@@ -10,7 +10,7 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
-#include <strstream>
+#include <sstream>
 #include <ctype.h>
 #include <unistd.h>
 #define _(String) (String)
@@ -482,7 +482,7 @@ void czytajreguly (std::istream &f)
 
 void regulyzarg (char *s)
 {
-	std::istrstream f (s);
+	std::stringstream f (s);
 	czytajreguly (f);
 }
 
