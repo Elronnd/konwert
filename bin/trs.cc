@@ -19,7 +19,7 @@
 #define WLKSLOWA 64*1024	// Maksymalna d³ugo¶æ s³owa do zamiany
 				// albo s³owa, na które zamieniamy
 
-#ifdef __GNUG__
+#if defined(__GNUG__) && !defined(__clang__)
 # define FALLTHROUGH __attribute__((fallthrough))
 #else
 # define FALLTHROUGH

@@ -3,7 +3,7 @@
 
 #define NPAR 16
 
-#ifdef __GNUG__
+#if defined(__GNUG__) && !defined(__clang__)
 # define FALLTHROUGH __attribute__((fallthrough))
 #else
 # define FALLTHROUGH
