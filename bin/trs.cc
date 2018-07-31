@@ -19,6 +19,12 @@
 #define WLKSLOWA 64*1024	// Maksymalna d³ugo¶æ s³owa do zamiany
 				// albo s³owa, na które zamieniamy
 
+#ifdef __GNUG__
+# define FALLTHROUGH __attribute__((fallthrough))
+#else
+# define FALLTHROUGH
+#endif
+
 char *nazwaprogramu;
 
 void uzycie (int status)
@@ -85,6 +91,7 @@ Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
 	exit (0);
 }
 
+[[noreturn]]
 void blad (const char *s)
 {
 	std::cerr << nazwaprogramu << ": " << s << std::endl;
@@ -328,7 +335,8 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 					else
 						blad (_("Syntax error after \\?"));
 				case '\\':
-					if (co) *s2++ = '\\';
+					if (co) { *s2++ = '\\'; }
+				FALLTHROUGH;
 				default:
 					c = (unsigned char) s1[-1];
 			}

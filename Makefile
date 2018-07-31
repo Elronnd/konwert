@@ -8,7 +8,7 @@
 
 version = 1.8
 
-CXX = clang++
+CXX = g++
 CXXFLAGS = -Wall -Wextra -O2 -pipe -std=c++11
 INSTALL = install
 
