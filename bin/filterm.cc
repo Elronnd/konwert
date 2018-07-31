@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
 		close (output[1]);
 		dup2 (output[0], 0);
 		close (output[0]);
-		putenv ("FILTERM=out");
+		setenv("FILTERM", "out", 1);
 		konwert (argv[2]);
 	}
 	close (output[0]);
@@ -251,7 +251,7 @@ int main(int argc, char **argv) {
 		close (input[0]);
 		dup2 (master, 1);
 		close (master);
-		putenv ("FILTERM=in");
+		setenv("FILTERM", "in", 1);
 		konwert (argv[1]);
 	}
 	close (master);
