@@ -1,8 +1,14 @@
-
 #include <stdlib.h>
 #include <iostream>
 
 #define NPAR 16
+
+#ifdef __GNUG__
+# define FALLTHROUGH __attribute__((fallthrough))
+#else
+# define FALLTHROUGH
+#endif
+
 
 int color, intensity, underline, reverse,
     s_color, s_intensity, s_underline, s_reverse,
@@ -307,6 +313,8 @@ void con_write (unsigned char c)
 		for (npar = 0; npar < NPAR; npar++) par[npar] = 0;
 		npar = -1;
 		state = ESgetpars;
+
+	    FALLTHROUGH;
 	    case ESgetpars:
 		if (c == ';')
 		{

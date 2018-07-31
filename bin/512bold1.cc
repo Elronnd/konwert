@@ -1,5 +1,11 @@
-
 #include <iostream>
+
+#ifdef __GNUG__
+# define FALLTHROUGH __attribute__((fallthrough))
+#else
+# define FALLTHROUGH
+#endif
+
 
 int kolory[2][8] = { { 0, 1, 2, 1, 4, 1, 2, 7 }, { 0, 5, 6, 6, 5, 5, 6, 3 } };
 
@@ -160,6 +166,7 @@ void con_write (unsigned char c)
 		for (npar = 0; npar < NPAR; npar++) par[npar] = 0;
 		npar = -1;
 		state = ESgetpars;
+	    FALLTHROUGH;
 	    case ESgetpars:
 		if (c == ';')
 		{
