@@ -1,4 +1,4 @@
-#include <iostream.h>
+#include <iostream>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +23,7 @@ char		line[] = "/dev/ptyXX";
 
 void uzycie (int status)
 {
-    (status ? cerr : cout) << "\
+    (status ? std::cerr : std::cout) << "\
 Usage: " << nazwaprogramu << " INPUT OUTPUT [COMMAND [ARGS]]\n\
 Execute the specified COMMAND (default is the shell), filtering terminal\n\
 input and/or output.\n\
@@ -47,7 +47,7 @@ In addition, the following standard options are recognized:\n\
 
 void wersja()
 {
-    cout << "\
+	std::cout << "\
 filterm, version " WERSJA "\n\
 Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
 ";
@@ -82,7 +82,7 @@ void getmaster()
 	    }
 	}
     }
-    cerr << "Out of pty's\n";
+    std::cerr << "Out of pty's" << std::endl;
     exit (1);
 }
 

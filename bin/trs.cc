@@ -8,9 +8,9 @@
 //      ^^      http://qrczak.home.ml.org/
 
 #include <string.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <strstream.h>
+#include <iostream>
+#include <fstream>
+#include <strstream>
 #include <ctype.h>
 #include <unistd.h>
 #define _(String) (String)
@@ -23,7 +23,7 @@ char *nazwaprogramu;
 
 void uzycie (int status)
 {
-	(status ? cerr : cout) << _("\
+	(status ? std::cerr : std::cout) << _("\
 Usage: ") << nazwaprogramu << _(" [-[r]e] 'REPLACE_THIS WITH_THAT [AND_THIS WITH_THAT]...'\n\
        ") << nazwaprogramu << _(" [-[r]f] FILE\n\
 Copy stdin to stdout replacing every occurence of given strings with\n\
@@ -78,7 +78,7 @@ Linux\n\
 
 void wersja ()
 {
-	cout << _("\
+	std::cout << _("\
 trs, version " WERSJA "\n\
 Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
 ");
@@ -87,7 +87,7 @@ Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
 
 void blad (char *s)
 {
-	cerr << nazwaprogramu << ": " << s << endl;
+	std::cerr << nazwaprogramu << ": " << s << std::endl;
 	exit (1);
 }
 
@@ -99,11 +99,11 @@ void blad (char *s)
 class bufor
 {
 private:
-	istream &str;
+	std::istream &str;
 	char *buf;
 	int wlk, poz;
 public:
-	bufor (int w, istream &s = cin) :
+	bufor (int w, std::istream &s = std::cin) :
 		str (s), buf (new char[w]), wlk (w), poz (0) {}
 	char operator[] (int i);
 	int niekoniec (int i);
@@ -134,7 +134,7 @@ int bufor::niekoniec (int i)
 struct zmienna
 {
 	int zmienna, wartosc;
-	zmienna *nast;
+	struct zmienna *nast;
 };
 
 struct regula
@@ -400,7 +400,7 @@ void jakieciekawe (char *s, int ile, int ileprzed)
 
 /******** CZYTAMY REGU£Y *****************************************************/
 
-int czytajslowo (istream &f, char *s, int n)
+int czytajslowo (std::istream &f, char *s, int n)
 {
 	int c;
 	for(;;)
@@ -432,7 +432,7 @@ int czytajslowo (istream &f, char *s, int n)
 	return 0;
 }
 
-void czytajreguly (istream &f)
+void czytajreguly (std::istream &f)
 {
 	int maxwstecz = 0, maxwprzod = 1;
 	for (;;)
@@ -474,7 +474,7 @@ void czytajreguly (istream &f)
 
 void regulyzarg (char *s)
 {
-	istrstream f (s);
+	std::istrstream f (s);
 	czytajreguly (f);
 }
 
@@ -512,10 +512,10 @@ void regulyzarg1 (char **argv, int &i, int argc)
 
 void regulyzpliku (char *nazwa)
 {
-	ifstream f (nazwa);
+	std::ifstream f (nazwa);
 	if (!f)
 	{
-		cerr << nazwaprogramu << ": " << _("Couldn't open file ") << nazwa << endl;
+		std::cerr << nazwaprogramu << ": " << _("Couldn't open file ") << nazwa << std::endl;
 		exit (1);
 	}
 	czytajreguly (f);
@@ -565,7 +565,7 @@ void trs ()
 							else if (c != *s) goto niepasuje;
 						}
 						for (s = r->naco, ls = r->dnaco; ls; s++, ls--)
-								cout.put (*s);
+								std::cout << (*s);
 					}
 					if ((mozebycpuste = r->ilezast))
 						poz += r->ilezast;
@@ -580,7 +580,7 @@ void trs ()
 				}
 			}
 		}
-		cout.put (buf[poz++]);
+		std::cout << (buf[poz++]);
 		mozebycpuste = 1;
 	  zamienione:;
 	}
@@ -588,7 +588,7 @@ void trs ()
 
 /******** PROGRAM G£ÓWNY *****************************************************/
 
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
 /*
 	setlocale (LC_ALL, "");
@@ -633,4 +633,6 @@ main (int argc, char **argv)
 			regulyzpliku (argv[optind]);
 
 	trs ();
+
+	return 0;
 }
