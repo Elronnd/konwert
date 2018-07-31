@@ -8,7 +8,8 @@
 
 version = 1.8
 
-CXXFLAGS = -Wall -O2 -pipe
+CXX = clang++
+CXXFLAGS = -Wall -Wextra -O2 -pipe -std=c++11
 INSTALL = install
 
 prefix = /usr/local

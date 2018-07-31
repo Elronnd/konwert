@@ -191,12 +191,12 @@ void csi_m()
 	    default:
 		if (par[i] >= 30 && par[i] <= 37)
 		{
-		    color = (par[i] - 30) | color & 0xF0;
+		    color = (par[i] - 30) | (color & 0xF0);
 		    update_attr();
 		}
 		else if (par[i] >= 40 && par[i] <= 47)
 		{
-		    color = ((par[i] - 40) << 4) | color & 0x0F;
+		    color = ((par[i] - 40) << 4) | (color & 0x0F);
 		    update_attr();
 		}
 		else
@@ -379,8 +379,7 @@ void licz_odleglosci()
 	                      abs (normalny[i][2] - normalny[j][2]);
 }
 
-main()
-{
+int main(void) {
     licz_odleglosci();
     reset_terminal();
     std::cout << "\30\33]R\33[0;"; update_attr(); std::cout << "m";
@@ -388,4 +387,6 @@ main()
     int c;
     while ((c = std::cin.get()) != -1) con_write (c);
     std::cout << "\30\33]R\33[0m";
+
+    return 0;
 }

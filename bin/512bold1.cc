@@ -96,12 +96,12 @@ void csi_m()
 	    default:
 		if (par[i] >= 30 && par[i] <= 37)
 		{
-		    color = (par[i] - 30) | color & 0xF0;
+		    color = (par[i] - 30) | (color & 0xF0);
 		    update_attr();
 		}
 		else if (par[i] >= 40 && par[i] <= 47)
 		{
-		    color = ((par[i] - 40) << 4) | color & 0x0F;
+		    color = ((par[i] - 40) << 4) | (color & 0x0F);
 		    update_attr();
 		}
 		else
@@ -200,8 +200,7 @@ void con_write (unsigned char c)
     std::cout << c;
 }
 
-main()
-{
+int main(void) {
     reset_terminal();
     std::cout << "\33]P0000000\33]P1AA0000\33]P200AA00\33]P3FFFFFF"
 	    "\33]P40000AA\33]P5FF55FF\33]P655FFFF\33]P7AAAAAA"
@@ -212,4 +211,6 @@ main()
     int c;
     while ((c = std::cin.get()) != -1) con_write (c);
     std::cout << "\33]R\33[0m";
+
+    return 0;
 }
