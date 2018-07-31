@@ -8,8 +8,7 @@
 
 version = 1.8
 
-SHELL = /bin/sh
-CXXFLAGS = -Wall -O2 -fomit-frame-pointer -pipe
+CXXFLAGS = -Wall -O2 -pipe
 INSTALL = install
 
 prefix = /usr/local

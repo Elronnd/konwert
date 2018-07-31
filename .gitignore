@@ -401,3 +401,8 @@ install/share/filters/viscii-viqri
 install/share/filters/wingreek-UTF8
 install/share/filters/xjp-UTF8
 install/share/filters/xmetodo-UTF8
+
+bin/512bold
+bin/512bold1
+bin/filterm
+bin/trs
