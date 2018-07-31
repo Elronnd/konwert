@@ -14,7 +14,7 @@
 #define WERSJA "1.8"
 
 char		*nazwaprogramu;
-char		*shell;
+const char	*shell;
 int		master;
 int		slave;
 struct termios	tt;
@@ -57,13 +57,13 @@ Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
 void getmaster()
 {
     char *pty = &line[strlen ("/dev/ptyp")];
-    for (char *bank = "pqrs"; *bank; bank++)
+    for (const char *bank = "pqrs"; *bank; bank++)
     {
 	line[strlen ("/dev/pty")] = *bank;
 	*pty = '0';
 	struct stat stb;
 	if (stat (line, &stb) < 0) break;
-	for (char *cp = "0123456789abcdef"; *cp; cp++)
+	for (const char *cp = "0123456789abcdef"; *cp; cp++)
 	{
 	    *pty = *cp;
 	    if ((master = open (line, O_RDWR)) >= 0)
@@ -138,13 +138,13 @@ void komenda (int argc, char *argv[])
     close (slave);
     if (!argc)
     {
-	char *slash = strrchr (shell, '/');
+	const char *slash = strrchr (shell, '/');
 	if (!slash) slash = shell - 1;
 	execl (shell, slash + 1, 0);
     }
     else if (argc == 1 && !strcmp (argv[0], "-"))
     {
-	char *slash = strrchr (shell, '/');
+	const char *slash = strrchr (shell, '/');
 	if (!slash) slash = shell - 1;
 	char *argv0 = new char[1 + strlen (slash + 1) + 1];
 	argv0[0] = '-';
@@ -168,8 +168,7 @@ void koniec (int)
     exit (0);
 }
 
-main (int argc, char *argv[])
-{
+int main(int argc, char **argv) {
     nazwaprogramu = argv[0];
     shell = getenv ("SHELL");
     if (!shell) shell = "/bin/sh";
