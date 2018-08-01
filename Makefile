@@ -10,7 +10,7 @@ version = 1.8
 
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -g -O2 -pipe -std=c++11
-CFLAGS = -Wall -Wextra -Werror -g -O2 -pipe -std=c99
+CFLAGS = -Wall -Wextra -Werror -g -O2 -pipe -std=c99 -D_POSIX_C_SOURCE -D_DEFAULT_SOURCE
 INSTALL = install
 
 prefix = /usr/local
