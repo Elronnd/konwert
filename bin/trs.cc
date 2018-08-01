@@ -7,13 +7,13 @@
 //     \__/              qrczak@knm.org.pl
 //      ^^      http://qrczak.home.ml.org/
 
-#include <string.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#define _(String) (String)
 
 #define WERSJA "1.8"
 #define WLKSLOWA 64*1024	// Maksymalna d³ugo¶æ s³owa do zamiany
@@ -27,11 +27,10 @@
 
 char *nazwaprogramu;
 
-void uzycie (int status)
-{
-	(status ? std::cerr : std::cout) << _("\
-Usage: ") << nazwaprogramu << _(" [-[r]e] 'REPLACE_THIS WITH_THAT [AND_THIS WITH_THAT]...'\n\
-       ") << nazwaprogramu << _(" [-[r]f] FILE\n\
+void uzycie(int status) {
+	fprintf(status ? stderr : stdout, "\
+Usage: %s [-[r]e] 'REPLACE_THIS WITH_THAT [AND_THIS WITH_THAT]...'\n\
+       %s [-[r]f] FILE\n\
 Copy stdin to stdout replacing every occurence of given strings with\n\
 other ones. This is similar to tr, but replaces strings, not only\n\
 single chars.\n\
@@ -75,27 +74,21 @@ In addition, the following standard options are recognized:\n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 \n\
-Example:\n") << "\
-$ echo Leeloo |" << nazwaprogramu << " -e 'el n e i i aqq o\\)\\n x o u'\n\
-Linux\n\
-";
-	exit (status);
+Example:\n\
+$ echo Leeloo | %s -e 'el n e i i aqq o\\)\\n x o u'\n\
+Linux\n", nazwaprogramu, nazwaprogramu, nazwaprogramu);
+	exit(status);
 }
 
-void wersja ()
-{
-	std::cout << _("\
-trs, version " WERSJA "\n\
-Copyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n\
-");
-	exit (0);
+void wersja(void) {
+	printf("trs, version %s\nCopyright 1998 Marcin Kowalczyk <qrczak@knm.org.pl>\n", WERSJA);
+	exit(0);
 }
 
 [[noreturn]]
-void blad (const char *s)
-{
-	std::cerr << nazwaprogramu << ": " << s << std::endl;
-	exit (1);
+void blad(const char *s) {
+	printf("%s: %s\n", nazwaprogramu, s);
+	exit(1);
 }
 
 /******** BUFOR **************************************************************/
@@ -206,7 +199,7 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 
 	while (*s1)
 	{
-		if (s2 - buf > WLKSLOWA - 2) blad (_("Rule too long"));
+		if (s2 - buf > WLKSLOWA - 2) blad ("Rule too long");
 		if (*s1 == '\\')
 		{
 			s1++;
@@ -280,24 +273,24 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 					break;
 				case '{':
 					if (!co) return 1;
-					if (*ileprzed != -1) blad (_("Multiple \\{'s"));
-					if (*ilezast != -1) blad (_("\\{ after \\}"));
+					if (*ileprzed != -1) blad ("Multiple \\{'s");
+					if (*ilezast != -1) blad ("\\{ after \\}");
 					*ileprzed = poz;
 					goto pomin;
 				case '}':
 					if (!co) return 1;
-					if (*ilezast != -1) blad (_("Multiple \\}'s"));
+					if (*ilezast != -1) blad ("Multiple \\}'s");
 					*ilezast = poz - (*ileprzed != -1 ? *ileprzed : 0);
 					goto pomin;
 				case '[':
 					if (!co) return 1;
-					if (!niewzbiorze) blad (_("Extra \\[ or missing \\]"));
+					if (!niewzbiorze) blad ("Extra \\[ or missing \\]");
 					niewzbiorze = 0;
 					*s2++ = '\\', *s2++ = '[';
 					przedzial = -1, c = -1;
 					goto pomin;
 				case ']':
-					if (niewzbiorze) blad (_("Extra \\] or missing \\["));
+					if (niewzbiorze) blad ("Extra \\] or missing \\[");
 					niewzbiorze = 1;
 					*s2++ = '\\', *s2++ = ']';
 					poz++;
@@ -333,7 +326,7 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 						goto pomin;
 					}
 					else
-						blad (_("Syntax error after \\?"));
+						blad ("Syntax error after \\?");
 				case '\\':
 					if (co) { *s2++ = '\\'; }
 				FALLTHROUGH;
@@ -350,7 +343,7 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 			if (niewzbiorze) *s2++ = '\\', *s2++ = '[';
 			for (; przedzial <= c; przedzial++)
 			{
-				if (s2 - buf > WLKSLOWA - 4) blad (_("Rule too long!"));
+				if (s2 - buf > WLKSLOWA - 4) blad ("Rule too long!");
 				if (przedzial == '\\') *s2++ = '\\';
 				*s2++ = przedzial;
 			}
@@ -364,7 +357,7 @@ int rozwineskejpy (char *napis1, char *&napis2, int &dlug2, zmienna **zmienne,
 		}
 	  pomin:;
 	}
-	if (!niewzbiorze) blad (_("Extra \\[ or missing \\]"));
+	if (!niewzbiorze) blad ("Extra \\[ or missing \\]");
 
 	memcpy (napis2 = new char[s2 - buf], buf, s2 - buf);
 	dlug2 = poz;
@@ -434,7 +427,7 @@ int czytajslowo (std::istream &f, char *s, int n)
 		}
 		*s1++ = c;
 		if ((c = f.get ()) == -1 || isspace (c)) break;
-		if (s1 - s > n - 2) blad (_("Rule too long"));
+		if (s1 - s > n - 2) blad ("Rule too long");
 	}
 	*s1 = '\0';
 	return 0;
@@ -451,7 +444,7 @@ void czytajreguly (std::istream &f)
 		if (!odwrotnie)
 		{
 			rozwineskejpy (s, r->co, r->dco, &r->warunki, 1, &r->ileprzed, &r->ilezast);
-			if (czytajslowo (f, s, WLKSLOWA)) blad (_("Incomplete rule"));
+			if (czytajslowo (f, s, WLKSLOWA)) blad ("Incomplete rule");
 			if (rozwineskejpy (s, r->naco, r->dnaco, &r->zmienne, 0, 0, 0))
 			{
 				anulujregule ();
@@ -461,7 +454,7 @@ void czytajreguly (std::istream &f)
 		else
 		{
 			int beztej = rozwineskejpy (s, r->naco, r->dnaco, &r->zmienne, 0, 0, 0);
-			if (czytajslowo (f, s, WLKSLOWA)) blad (_("Incomplete rule"));
+			if (czytajslowo (f, s, WLKSLOWA)) blad ("Incomplete rule");
 			if (beztej)
 			{
 				anulujregule ();
@@ -469,7 +462,7 @@ void czytajreguly (std::istream &f)
 			}
 			rozwineskejpy (s, r->co, r->dco, &r->warunki, 1, &r->ileprzed, &r->ilezast);
 		}
-		if (!r->dco) blad (_("Empty string to translate"));
+		if (!r->dco) blad ("Empty string to translate");
 		/* ¦ci¶le bior±c to !ilezast jest tym przypadkiem, ale kombinacja
 		   !ilezast && dco jest specjalnie obs³u¿ona i dzia³a */
 		if (r->ileprzed > maxwstecz) maxwstecz = r->ileprzed;
@@ -498,7 +491,7 @@ void regulyzarg1 (char **argv, int &i, int argc)
 			r->dco = strlen (r->co);
 			r->ileprzed = 0;
 			r->ilezast = r->dco;
-			if (!(i < argc && *argv[i])) blad (_("Incomplete rule"));
+			if (!(i < argc && *argv[i])) blad ("Incomplete rule");
 			r->naco = argv[i++];
 			r->dnaco = strlen (r->naco);
 		}
@@ -506,7 +499,7 @@ void regulyzarg1 (char **argv, int &i, int argc)
 		{
 			r->naco = argv[i++];
 			r->dnaco = strlen (r->naco);
-			if (!(i < argc && *argv[i])) blad (_("Incomplete rule"));
+			if (!(i < argc && *argv[i])) blad ("Incomplete rule");
 			r->co = argv[i++];
 			r->dco = strlen (r->co);
 			r->ileprzed = 0;
@@ -523,7 +516,7 @@ void regulyzpliku (char *nazwa)
 	std::ifstream f (nazwa);
 	if (!f)
 	{
-		std::cerr << nazwaprogramu << ": " << _("Couldn't open file ") << nazwa << std::endl;
+		fprintf(stderr, "%s: Couldn't open files %s\n", nazwaprogramu, nazwa);
 		exit (1);
 	}
 	czytajreguly (f);
@@ -573,7 +566,7 @@ void trs ()
 							else if (c != *s) goto niepasuje;
 						}
 						for (s = r->naco, ls = r->dnaco; ls; s++, ls--)
-								std::cout << (*s);
+								printf("%c", *s);
 					}
 					if ((mozebycpuste = r->ilezast))
 						poz += r->ilezast;
@@ -588,7 +581,7 @@ void trs ()
 				}
 			}
 		}
-		std::cout << (buf[poz++]);
+		printf("%c", buf[poz++]);
 		mozebycpuste = 1;
 	  zamienione:;
 	}
