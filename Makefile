@@ -325,6 +325,7 @@ $(anyfiles): \
 $(srcauxdir)/any/%: $(srcdeveldir)/any/% \
 $(patsubst %,$(srccharsetsdir)/%,$(charsets)) \
 $(srcdeveldir)/mkany
+	mkdir -p $(srcauxdir)/any
 	$(perl) $(srcdeveldir)/mkany $< >$@
 
 ###############################################################################
